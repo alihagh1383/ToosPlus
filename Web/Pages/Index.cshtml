@@ -1,0 +1,75 @@
+﻿@page
+@using Web.Repo.Interface
+@inject ISliderRepo sliderRepo
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="main-slider-box">
+                <div class="owl-carousel owl-theme main-slider">
+                    @{
+                        foreach (var s in sliderRepo.GetActiveSlides().Where(s => !string.IsNullOrWhiteSpace(s.Image)))
+                        {
+                            <div class="item">
+                                <figure>
+                                    <img src="~/File/@(s.Image)" alt="">
+                                    <figcaption class="gradient-fig"></figcaption>
+                                    <figcaption class="desc-fig">
+                                        <h3>@s.Title</h3>
+                                        <p>@s.Description</p>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear-fix"></div>
+<div class="main-content">
+    <div class="clear-fix"></div>
+    <div class="latest-posts">
+        <div class="container-fluid">
+            <div class="blog-title-span">
+                <span class="title">آخرین مطالب</span>
+            </div>
+            @foreach (var n in Model.News)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="post-box">
+                        <a asp-page="News" asp-route-Newsid="@n.Id">
+                            <figure>
+                                @if (n.TitleImageName is { })
+                                {
+                                    <img src="~/File/@n.TitleImageName" alt="">
+                                }
+                                <figcaption class="meta-fig">
+                                    <span><i class="fa fa-clock-o"></i>@n.Date</span>&nbsp;
+                                </figcaption>
+                                <figcaption class="view">
+                                    <span>@n.Category</span>
+                                </figcaption>
+                            </figure>
+                            <div class="text-p">
+                                <h5 class="towline">  @n.Title</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+
+</style>

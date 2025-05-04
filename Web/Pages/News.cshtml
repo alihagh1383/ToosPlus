@@ -1,0 +1,59 @@
+﻿@page
+@inject FileService fs
+@model Web.Pages.NewsModel
+@{
+}
+@{
+    var n = Model.RNewsDto;
+}
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            @{
+                if (User.Identity!.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin")
+                    || User.IsInRole("Developer")
+                    || User.Identity.Name == Model.RNewsDto.Author)
+                    {
+                        <form asp-page="EditorNews" method="get">
+                            <input type="hidden" name="NewsId" value="@Model.NewsId" />
+                            <input type="submit" value="ویرایش" class="form-control" />
+                        </form>
+                    }
+                }
+
+            }
+        </div>
+    </div>
+</div>
+<div class="clear-fix"></div>
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="post_img">
+                        @if (n.TitleImageName is { })
+                        {
+                            <img src="~/File/@n.TitleImageName" alt="">
+                        }
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="posts_meta text-center">
+                <span><i class="fa fa-comment-o"></i> @n.Author </span>
+                <span><i class="fa fa-archive"></i> @n.Category </span>
+                <span><i class="fa fa-calendar"></i> @n.Date </span>
+            </div>
+            <div class="post_content">
+                @n.Content
+            </div>
+
+        </div>
+    </div>
+</div>

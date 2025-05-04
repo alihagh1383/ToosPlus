@@ -1,0 +1,141 @@
+﻿@using System.Security.Claims
+@using Web.Repo.Interface
+@inject ICategoriesRepo categoriesRepo
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Web</title>
+    <link rel="stylesheet" href="~/css/bootstrap.css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/css/owl.theme.default.css">
+    <link rel="stylesheet" href="~/style.css">
+</head>
+<body>
+    @{
+        var cl = categoriesRepo.GetCategories();
+    }
+    <div class="top-bar">
+        <div class="container-fluid">
+            <div class="col-xs-1">
+                <div class="search-btn">
+                    <span><a asp-page="Search"> <i class="fa fa-search"></i></a></span>
+                </div>
+            </div>
+            <div class="col-xs-11">
+                <div class="top-cat-box">
+                    <div class="col-md-12">
+                        <div class="menu">
+                            <ul>
+                                @{
+                                    if (!Context.User.Identity!.IsAuthenticated)
+                                    {
+                                        <li><a asp-page="Login">ورود</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a asp-page="Logout">خروج</a></li>
+                                        if (Context.User.IsInRole("Admin"))
+                                        {
+                                            <li><a asp-page="AdminCat">دسته بندی ها</a></li>
+                                            <li><a asp-page="AdminSlider">بنر ها</a></li>
+                                            <li><a asp-page="EditorNews">خبر جدید</a></li>
+                                        }
+                                        if (Context.User.IsInRole("Editor"))
+                                        {
+                                            <li><a asp-page="EditorNews">خبر جدید</a></li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-header">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <div class="main-menu">
+                    <ul>
+                        <li><a asp-page="Index">صفحه اصلی</a></li>
+                        @foreach (var item in cl.Take(4))
+                        {
+                            <li><a asp-page="Search" asp-route-Cat="@item">@item</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @RenderBody()
+    <div class="clear-fix"></div>
+    <div class="footer">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <div class="footer-box">
+                    <span class="title">دسترسی سریع</span>
+                </div>
+            </div>
+            <div class="clear-fix"></div>
+        </div>
+        <div class="container-fluid">
+            @{
+                var count = (double)cl.Count();
+                var split = (int)Math.Round((count / 3), MidpointRounding.ToPositiveInfinity);
+                for (int i = 0; i < 3; i++)
+                {
+                    <div class="col-md-4">
+                        <div class="footer-box">
+                            <ul>
+                                @foreach (var item in cl.Skip(i * split).Take(split))
+                                {
+                                    <li><a asp-page="search" asp-route-Cat="@item">@item</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+            }
+            <div class="clear-fix"></div>
+        </div>
+    </div>
+
+    @*     <div class="end-wrapper">
+        <div class="container-fluid">
+            <div class="col-md-6">
+                <div class="copy-r">
+                    <p>&copy; تمامی حقوق متعلق به سئو 90 می باشد</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="creator text-left">
+                    <p>طراحی سایت ، سئو 90</p>
+                </div>
+            </div>
+        </div>
+    </div>      <div class="end-wrapper">
+        <div class="container-fluid">
+            <div class="col-md-6">
+                <div class="copy-r">
+                    <p>&copy; تمامی حقوق متعلق به سئو 90 می باشد</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="creator text-left">
+                    <p>طراحی سایت ، سئو 90</p>
+                </div>
+            </div>
+        </div>
+    </div> *@
+    <div class="bg"></div>
+    <script src="~/js/jquery.js"></script>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/index.js"></script>
+</body>
+</html>

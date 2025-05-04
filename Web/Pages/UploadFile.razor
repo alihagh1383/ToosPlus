@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Web.Services
+@inject FileService fileService
+
+<InputFile OnChange="@SingleUpload" />
+<label>@Status</label>
+<label>@FileId</label>
+<input type="text" name="@For" value="@FileId" hidden>
+@if (FileId is { })
+{
+    <img src="data:image/*;base64,@FileBase64" />
+}
+<br />
+@code {
+    [Parameter] public string For { get; set; } = "File";
+    [Parameter] public string? FileId { get; set; }
+    public string? FileBase64 { get; set; }
+    public string? Status { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (FileId is { }) FileBase64 = fileService.GetString(FileId);
+    }
+
+    private async Task SingleUpload(InputFileChangeEventArgs e)
+    {
+        var stream = e.File;
+        var oldFile = FileId;
+        FileId = "";
+        Status = "درحال اپلود";
+        FileId = await fileService.UploadFile(stream);
+        Status = FileId is null ? "با خطا مواجه شد" : "";
+        if (FileId is { })
+        {
+            if (oldFile is { }) fileService.DeleteFile(oldFile);
+            FileBase64 = fileService.GetString(FileId);
+        }
+        else FileId = oldFile;
+        await Task.CompletedTask;
+    }
+}

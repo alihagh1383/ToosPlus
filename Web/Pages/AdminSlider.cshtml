@@ -1,0 +1,93 @@
+﻿@page
+@model Web.Pages.AdminSliderModel
+@{
+}
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="comments_form">
+                <form method="post" enctype="multipart/form-data">
+                    @(await Html.RenderComponentAsync<UploadFile>(RenderMode.ServerPrerendered, new { 
+                        For = $"{nameof(Model.SingelSlide)}.{nameof(Model.SingelSlide.Image)}",
+                        FileId = Model.SingelSlide.Image }))
+                    <div class="col-md-6">
+                        <label asp-for="@Model.SingelSlide.Title"></label>
+                        <input asp-for="@Model.SingelSlide.Title" class="form-control" />
+                        <span asp-validation-for="@Model.SingelSlide.Title"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="@Model.SingelSlide.Description"></label>
+                       <input asp-for="@Model.SingelSlide.Description" class="form-control" />
+                        <span asp-validation-for="@Model.SingelSlide.Description"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <input asp-for="@Model.SingelSlide.IsActive" class="form-control" type="hidden" value="false"/>
+                    </div>
+                    @*    <div class="col-md-12">
+                        <input class="form-control" name="formFile" type="file" />
+                    </div> *@
+                    <div class="col-md-6">
+                        <div class="text-left">
+                            <button class="btn btn-primary">ثبت</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="comments_form">
+                            <table class="table-bordered table-hover table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">عکس</th>
+                            <th scope="col">تیتر</th>
+                            <th scope="col">توضیحات</th>
+                            <th scope="col">ویرایش</th>
+                            <th scope="col">حذف</th>
+                            <th scope="col">نمایش</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model.Slides.Select((d, i) => new { d, i }))
+                        {
+                            <tr style="text-align:center">
+                                <th scope="row">1</th>
+                                <td><img src="~/File/@(c.d.Image)"/></td>
+                                <td>@c.d.Title</td>
+                                <td>@c.d.Description</td>
+                                <td>
+                                    <form method="get" >
+                                        <input type="hidden" name="SlideId" value="@c.d.Id" />
+                                        <button class="btn btn-primary">ویرایش</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-page-handler="Delete" method="post">
+                                        <input type="hidden" name="Id" value="@c.d.Id" />
+                                        <button class="btn btn-danger">حذف</button>
+                                    </form>
+                                </td> <td>
+                                    <form asp-page-handler="Active" method="post">
+                                        <input type="hidden" name="Id" value="@c.d.Id" />
+                                        <input type="hidden" name="Active" value="@(c.d.IsActive? "false":"true")" />
+                                        <button class="btn @(c.d.IsActive? "btn-danger":"btn-primary")">@(c.d.IsActive? "غیر فعال سازی":"فعال سازی")</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/_framework/blazor.server.js"></script>

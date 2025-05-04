@@ -1,0 +1,55 @@
+﻿@page
+@using Web.Repo.Interface
+@inject ICategoriesRepo categoriesRepo
+@model Web.Pages.AdminCatModel
+@{
+    Layout = "_layout";
+}
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <div class="comments_form">
+                <form method="post" asp-page-handler="Post" enctype="multipart/form-data">
+                    <input type="text" name="Name" />
+                    <button class="btn btn-primary">افزودن</button>
+                </form>
+                <table class="table-bordered table-hover table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">نام</th>
+                            <th scope="col">تعداد خبر</th>
+                            <th scope="col">ویرایش نام</th>
+                            <th scope="col">حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in categoriesRepo.GetAllData().Select((d, i) => new { d, i }))
+                        {
+                            <tr style="text-align:center">
+                                <th scope="row">1</th>
+                                <td>@c.d.Name</td>
+                                <td>@c.d.NewsCount</td>
+                                <td>
+                                    <form asp-page-handler="Put" enctype="multipart/form-data">
+                                        <input type="hidden" name="Id" value="@c.d.Id" />
+                                        <input type="text" name="Name" />
+                                        <button class="btn btn-primary">ویرایش</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form asp-page-handler="Delete" enctype="multipart/form-data">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="Id" value="@c.d.Id" />
+                                        <button class="btn btn-danger">حذف</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

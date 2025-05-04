@@ -1,0 +1,88 @@
+﻿@page
+@inject FileService fs
+@model Web.Pages.SearchModel
+@{
+}
+<div class="single_post">
+    <div class="container-fluid">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form enctype="multipart/form-data">
+                <div class="col-xs-9">
+                    <input class="form-control" asp-for="@Model.q" />
+                    <input asp-for="@Model.Cat" type="hidden" />
+                </div>
+                <div class="col-xs-3">
+                    <input type="submit" value="جستجو" class="form-control" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="latest-posts">
+    <div class="container-fluid">
+       
+        <div class="col-md-12">
+            <div class="blog-title-span">
+                <span class="title">اخبار و مقالات</span>
+            </div>
+           
+            @foreach (var n in Model.News)
+            {
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="post-box">
+                        <a asp-page="/news" asp-route-NewsId="@n.Id">
+                            <figure>
+                                @if (n.TitleImageName is { })
+                                {
+                                    <img src="~/File/@n.TitleImageName" alt="">
+                                }
+                                <figcaption class="meta-fig">
+                                    <span><i class="fa fa-clock-o"></i> 99/3/20</span>&nbsp;
+                                </figcaption>
+                                <figcaption class="view">
+                                    <span>@n.Category</span>
+                                </figcaption>
+                            </figure>
+                            <div class="text-p">
+                                <h5 class="towline">  @n.Title</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+        <div class="col-md-12 text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    @{
+                        Dictionary<String, string> data = new();
+                        if (!string.IsNullOrWhiteSpace(Model.Cat)) data.Add(nameof(Model.Cat), Model.Cat);
+                        if (!string.IsNullOrWhiteSpace(Model.q)) data.Add(nameof(Model.q), Model.q);
+                        if (Model.Count != 50) data.Add(nameof(Model.Count), Model.Count.ToString());
+                    }
+                    @if (Model.PageIndex > 1)
+                    {
+                        <li class="page-item"><a class="page-link" asp-page="Search" asp-all-route-data=@data asp-route-PageIndex="@(Model.PageIndex - 1)">قبلی</a></li>
+                    }
+                    <li class="page-item"><a class="page-link" asp-page="Search" asp-all-route-data=@data asp-route-PageIndex="1">1</a></li>
+                    @if (Model.Pages > 2)
+                    {
+                        <li class="page-item">...</li>
+                    }
+                    @if (Model.Pages > 1)
+                    {
+                        <li class="page-item"><a class="page-link" asp-page="Search" asp-all-route-data=@data asp-route-PageIndex="@(Model.Pages)">@Model.Pages</a></li>
+                    }
+                    @if (Model.PageIndex < Model.Pages)
+                    {
+                        <li class="page-item"><a class="page-link" asp-page="Search" asp-all-route-data=@data asp-route-PageIndex="@(Model.PageIndex + 1)">بعدی</a></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
