@@ -11,7 +11,6 @@ using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
 builder.Services.AddSingleton<FileService>(p => new("Uploads"));
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy(name: "Developer"/**/, configurePolicy: p => p.RequireRole(nameof(UserRule.Developer)))
