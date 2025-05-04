@@ -71,7 +71,7 @@ app.MapBlazorHub();
             Title = MrX.Web.Security.Random.String(100, lowerCase: true, lowerCaseSet: fa),
             Creator = db.Users.First(),
             Category = db.NewsCategories.AsEnumerable().OrderBy(p => Guid.NewGuid()).First(),
-            TitleImageName = "019695e4-d216-7b55-9bb4-c412092294a0.jpg"
+            TitleImageName = "019696c0-6bd5-71fb-8b72-b869ef0658fe.jpg"
         }));
     db.SaveChanges();
     db.Dispose();
