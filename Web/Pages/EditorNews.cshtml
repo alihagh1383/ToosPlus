@@ -1,5 +1,4 @@
 ﻿@page
-@using Web.Pages
 @model Web.Pages.EditorNewsModel
 @{
     Layout = "_Layout";
@@ -55,7 +54,7 @@
 
 <script>
 
-    var editor = new FroalaEditor('#Content');
+    const editor = new FroalaEditor('#Content');
 </script>
 <style>
     .edit div {

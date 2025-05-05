@@ -2,6 +2,9 @@
 	font-family: "seo90";
 	src: url("fonts/Vazir-Medium-FD.woff") format('woff');
 }
+.row{
+	display: flex;align-items: center;
+}
 .towline {
 	display: -webkit-box;
 	-webkit-line-clamp: 2;

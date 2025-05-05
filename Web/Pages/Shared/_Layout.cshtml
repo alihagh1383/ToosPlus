@@ -1,6 +1,5 @@
-﻿@using System.Security.Claims
-@using Web.Repo.Interface
-@inject ICategoriesRepo categoriesRepo
+﻿@using Web.Repo.Interface
+@inject ICategoriesRepo CategoriesRepo
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -15,7 +14,7 @@
 </head>
 <body>
     @{
-        var cl = categoriesRepo.GetCategories();
+        var cl = CategoriesRepo.GetCategories();
     }
     <div class="top-bar">
         <div class="container-fluid">

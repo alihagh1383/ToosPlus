@@ -2,7 +2,6 @@ using Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
 using System.Security.Claims;
 using Web.DTO.Read;
 using Web.DTO.Write;
@@ -18,7 +17,7 @@ namespace Web.Pages
         public List<string> Categories { get; set; } = [.. categoriesRepo.GetCategories()];
         public IActionResult OnGet()
         {
-            if (NewsId is not null) if (newsRepo.GetNews(NewsId ?? new()).news is { } n &&
+            if (NewsId is not null) if (newsRepo.GetNews(NewsId ?? new Guid()).news is { } n &&
                 (n.Author == HttpContext.User.FindFirstValue(ClaimTypes.Name)
                 || HttpContext.User.IsInRole(nameof(UserRule.Admin))
                 || HttpContext.User.IsInRole(nameof(UserRule.Developer))))
@@ -58,7 +57,7 @@ namespace Web.Pages
                                 || HttpContext.User.IsInRole(nameof(UserRule.Admin))
                                 || HttpContext.User.IsInRole(nameof(UserRule.Developer)))
                             {
-                                newsRepo.UpdateNews(new()
+                                newsRepo.UpdateNews(new RNewsDto
                                 {
                                     Author = n.news.Author,
                                     Category = News.Category,

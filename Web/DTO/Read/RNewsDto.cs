@@ -1,6 +1,4 @@
-﻿using Data;
-
-namespace Web.DTO.Read
+﻿namespace Web.DTO.Read
 {
     public class RNewsDto
     {

@@ -1,6 +1,7 @@
 ﻿@page
+@using Data
 @using Web.Repo.Interface
-@inject ICategoriesRepo categoriesRepo
+@inject ICategoriesRepo CategoriesRepo
 @model Web.Pages.AdminCatModel
 @{
     Layout = "_layout";
@@ -22,10 +23,11 @@
                             <th scope="col">تعداد خبر</th>
                             <th scope="col">ویرایش نام</th>
                             <th scope="col">حذف</th>
+                            <th scope="col">مکان صفحه اصلی</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var c in categoriesRepo.GetAllData().Select((d, i) => new { d, i }))
+                        @foreach (var c in CategoriesRepo.GetAllData().Select((d, i) => new { d, i }))
                         {
                             <tr style="text-align:center">
                                 <th scope="row">1</th>
@@ -40,10 +42,33 @@
                                 </td>
                                 <td>
                                     <form asp-page-handler="Delete" enctype="multipart/form-data">
-                                        <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="Id" value="@c.d.Id" />
                                         <button class="btn btn-danger">حذف</button>
                                     </form>
+                                </td>
+                                <td>
+                                    <form asp-page-handler="Loc" enctype="multipart/form-data">
+                                        <input type="hidden" name="Id" value="@c.d.Id" />
+                                        <select name="loc">
+                                            @{
+                                                foreach (LocationInIndex loc in Enum.GetValuesAsUnderlyingType<LocationInIndex>())
+                                                {
+                                                    if (c.d.LocationInIndex == loc)
+                                                    {
+                                                        <option value="@loc" selected> @loc.GetDisplayName() </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@loc"> @loc.GetDisplayName() </option>
+                                                    }
+                                                }
+                                            }
+
+                                        </select>
+
+                                        <button class="btn btn-success">جابجایی</button>
+                                    </form>
+                                    @*Todo*@
                                 </td>
                             </tr>
                         }

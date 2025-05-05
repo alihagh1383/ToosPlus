@@ -1,30 +1,80 @@
 ﻿@page
 @using Web.Repo.Interface
-@inject ISliderRepo sliderRepo
+@inject ISliderRepo SliderRepo
+@inject INewsRepo newsRepo
+@inject ICategoriesRepo categoriesRepo
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="main-slider-box">
-                <div class="owl-carousel owl-theme main-slider">
-                    @{
-                        foreach (var s in sliderRepo.GetActiveSlides().Where(s => !string.IsNullOrWhiteSpace(s.Image)))
-                        {
-                            <div class="item">
-                                <figure>
-                                    <img src="~/File/@(s.Image)" alt="">
-                                    <figcaption class="gradient-fig"></figcaption>
-                                    <figcaption class="desc-fig">
-                                        <h3>@s.Title</h3>
-                                        <p>@s.Description</p>
-                                    </figcaption>
-                                </figure>
-                            </div>
+@{
+    var cats = categoriesRepo.GetAllData();
+}
+<div class="clear-fix"></div>
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="r-sidebar">
+                    <div class="special-posts">
+                        @{
+                            if (cats.FirstOrDefault(p => p.LocationInIndex == Data.LocationInIndex.SliderR) is { } csr)
+                            {
+                                var catrn = categoriesRepo.GetCategoryByIdWhitNews(csr.Id, 4);
+                                <span class="title">@csr.Name</span>
+                                <br>
+                                foreach (var item in catrn!.News)
+                                {
+                                    <div class="special-box">
+                                        <a asp-page="news" asp-route-NewsId="@item.Id">
+                                            <figure>
+                                                <img src="~/File/@item.TitleImageName" alt="">
+                                                <figcaption class="txt">
+                                                    <h4>@item.Title</h4>
+                                                    <span><i class="fa fa-calendar-o"></i>@item.Date</span>
+                                                </figcaption>
+                                                <figcaption class="link"><i class="fa fa-external-link"></i></figcaption>
+                                            </figure>
+                                        </a>
+                                    </div>
+                                }
+                            }
                         }
-                    }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                @{
+                    await Html.RenderPartialAsync("Partial/Slider", SliderRepo.GetActiveSlides().Where(s => !string.IsNullOrWhiteSpace(s.Image)).ToList());
+                }
+            </div>
+            <div class="col-md-3">
+                <div class="r-sidebar">
+                    <div class="special-posts">
+                        @{
+                            if (cats.FirstOrDefault(p => p.LocationInIndex == Data.LocationInIndex.SliderL) is { } csl)
+                            {
+                                var catrn = categoriesRepo.GetCategoryByIdWhitNews(csl.Id, 4);
+                                <span class="title">@csl.Name</span>
+                                <br>
+                                foreach (var item in catrn!.News)
+                                {
+                                    <div class="special-box">
+                                        <a asp-page="news" asp-route-NewsId="@item.Id">
+                                            <figure>
+                                                <img src="~/File/@item.TitleImageName" alt="">
+                                                <figcaption class="txt">
+                                                    <h4>@item.Title</h4>
+                                                    <span><i class="fa fa-calendar-o"></i>@item.Date</span>
+                                                </figcaption>
+                                                <figcaption class="link"><i class="fa fa-external-link"></i></figcaption>
+                                            </figure>
+                                        </a>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,44 +82,105 @@
 </div>
 <div class="clear-fix"></div>
 <div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="l-sidebar">
+                    <div class="cat-sidebar">
+                        <span class="title">دسته بندی مطالب</span>
+                        <div class="text-left"><i class="fa fa-folder-o"></i></div>
+                        <ul>
+                            @foreach (var item in cats)
+                            {
+                                <li><a asp-page="search" asp-route-Cat="@item.Name">@item.Name</a><span>@item.NewsCount</span></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="content-wrapper">
+                    <div class="most-views">
+                        @{
+                            if (cats.FirstOrDefault(p => p.LocationInIndex == Data.LocationInIndex.BottomSlider) is { } cbs)
+                            {
+                                var catrn = categoriesRepo.GetCategoryByIdWhitNews(cbs.Id, 4);
+                                <span class="title">@cbs.Name</span>
+                                if (catrn!.News.Any())
+                                {
+                                    {
+                                        var f = catrn.News.First();
+                                        <div class="col-md-8">
+                                            <div class="main-post">
+                                                <a asp-page="news" asp-route-NewsId="@f.Id">
+                                                    <figure>
+                                                        <img src="~/File/@f.TitleImageName" alt="">
+                                                        <figcaption>
+                                                            <span><i class="fa fa-folder-o"></i>@cbs.Name</span>
+                                                            <h3>@f.Title</h3>
+                                                        </figcaption>
+                                                    </figure>
+                                                    <div class="p-div">
+                                                        <p>
+                                                            @f.Content.Substring(0, 200)
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="col-md-4">
+                                        <div class="oth-posts">
+                                            @foreach (var item in catrn.News.Skip(1))
+                                            {
+                                                <div class="r-box">
+                                                    <span class="cat-span">@catrn.Name</span>
+                                                    <a href="#">
+                                                        <h5>@item.Title</h5>
+                                                    </a>
+                                                    <span><i class="fa fa-clock-o"></i>@item.Date</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="l-sidebar">
+                    <div class="cat-sidebar report">
+                        @{
+                            if (cats.FirstOrDefault(p => p.LocationInIndex == Data.LocationInIndex.BottomSliderR) is { } cbsr)
+                            {
+                                var catrn = categoriesRepo.GetCategoryByIdWhitNews(cbsr.Id, 9);
+                                <span class="title">@cbsr.Name</span>
+                                <div class="text-left"><i class="fa fa-arrows-alt"></i></div>
+                                <ul>
+                                    @foreach (var item in catrn!.News)
+                                    {
+                                        <li><a asp-page="news" asp-route-NewsId="@item.Id">@item.Title</a></li>
+                                    }
+                                </ul>
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <div class="clear-fix"></div>
     <div class="latest-posts">
         <div class="container-fluid">
             <div class="blog-title-span">
                 <span class="title">آخرین مطالب</span>
             </div>
-            @foreach (var n in Model.News)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <div class="post-box">
-                        <a asp-page="News" asp-route-Newsid="@n.Id">
-                            <figure>
-                                @if (n.TitleImageName is { })
-                                {
-                                    <img src="~/File/@n.TitleImageName" alt="">
-                                }
-                                <figcaption class="meta-fig">
-                                    <span><i class="fa fa-clock-o"></i>@n.Date</span>&nbsp;
-                                </figcaption>
-                                <figcaption class="view">
-                                    <span>@n.Category</span>
-                                </figcaption>
-                            </figure>
-                            <div class="text-p">
-                                <h5 class="towline">  @n.Title</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+            @{
+                await Html.RenderPartialAsync("Partial/LastPosts", newsRepo.GetNewsWithCreatorAndCategory(8, 0).news.ToList());
             }
-
         </div>
     </div>
 </div>
-
-
-
-<style>
-
-
-</style>

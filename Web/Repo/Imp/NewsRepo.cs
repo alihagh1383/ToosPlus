@@ -20,7 +20,7 @@ namespace Web.Repo.Imp
                     Creator = u,
                     Content = dto.Content,
                     Title = dto.Title,
-                    Date = dto.Date ?? new(),
+                    Date = dto.Date ?? new DateOnly(),
                     TitleImageName = dto.TitleImageName
                 }).Entity;
                 dbContext.SaveChanges();
@@ -30,7 +30,7 @@ namespace Web.Repo.Imp
                     Category = c.Name,
                     Content = dto.Content,
                     Title = dto.Title,
-                    Date = dto.Date ?? new(),
+                    Date = dto.Date ?? new DateOnly(),
                     Id = n.Id,
                     TitleImageName = dto.TitleImageName
                 }, true);
@@ -51,16 +51,16 @@ namespace Web.Repo.Imp
                 : (null, false);
         }
 
-        public (IEnumerable<RNewsDto> news, int countall) GetNewsWithCreatorAndCategory(int Count, int Page, string? Cat)
+        public (IEnumerable<RNewsDto> news, int countall) GetNewsWithCreatorAndCategory(int count, int page, string? cat)
         {
             var linq = dbContext.News
-                    .Where(p => Cat == null || p.Category.Name == Cat);
-            var List =
+                    .Where(p => cat == null || p.Category.Name == cat);
+            var list =
                 linq
                     .Select(p => new { p.Category, p.Creator, p.Content, p.Date, p.Title, p.Id, p.TitleImageName })
                     .OrderBy(p => p.Date)
-                    .Skip(Page * Count)
-                    .Take(Count)
+                    .Skip(page * count)
+                    .Take(count)
                     .Select(p => new RNewsDto
                     {
                         Id = p.Id,
@@ -71,20 +71,20 @@ namespace Web.Repo.Imp
                         Category = p.Category.Name,
                         TitleImageName = p.TitleImageName
                     });
-            return (List, linq.Count() / Count);
+            return (list, linq.Count() / count);
         }
 
-        public (IEnumerable<RNewsDto> news, int countall) SearchNewsWithCreatorAndCategory(int Count, int Page, string q, string? Cat = null)
+        public (IEnumerable<RNewsDto> news, int countall) SearchNewsWithCreatorAndCategory(int count, int page, string q, string? cat = null)
         {
             var linq = dbContext.News
-                    .Where(p => Cat == null || p.Category.Name == Cat)
+                    .Where(p => cat == null || p.Category.Name == cat)
                     .Where(p => p.Title.Contains(q));
-            var List =
+            var list =
                 linq
                     .Select(p => new { p.Category, p.Creator, p.Content, p.Date, p.Title, p.Id, p.TitleImageName })
                     .OrderBy(p => p.Date)
-                    .Skip(Page * Count)
-                    .Take(Count)
+                    .Skip(page * count)
+                    .Take(count)
                     .Select(p => new RNewsDto
                     {
                         Id = p.Id,
@@ -95,7 +95,7 @@ namespace Web.Repo.Imp
                         Category = p.Category.Name,
                         TitleImageName = p.TitleImageName
                     });
-            return (List, linq.Count() / Count);
+            return (list, linq.Count() / count);
         }
 
         public (RNewsDto? news, bool Sucsses) UpdateNews(RNewsDto dto)
@@ -112,7 +112,7 @@ namespace Web.Repo.Imp
             n.TitleImageName = dto.TitleImageName ?? n.TitleImageName;
             dbContext.News.Update(n);
             dbContext.SaveChanges();
-            return (new()
+            return (new RNewsDto
             {
                 Id = n.Id,
                 Date = n.Date,

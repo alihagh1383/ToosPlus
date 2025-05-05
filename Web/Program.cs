@@ -1,17 +1,17 @@
 ﻿using Data;
-using Google.Api;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using MrX.Web.Security;
 using Web.Repo.Imp;
 using Web.Repo.Interface;
 using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.ClearProviders();
-builder.Services.AddSingleton<FileService>(p => new("Uploads"));
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Logging.ClearProviders();
+}
+
+builder.Services.AddSingleton<FileService>(p => new FileService("Uploads"));
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy(name: "Developer"/**/, configurePolicy: p => p.RequireRole(nameof(UserRule.Developer)))
     .AddPolicy(name: "Admin"/******/, configurePolicy: p => p.RequireRole(nameof(UserRule.Developer), nameof(UserRule.Admin)))

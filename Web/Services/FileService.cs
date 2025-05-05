@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc;
-using System.Text;
 
 namespace Web.Services
 {
     public class FileService
     {
-        public string folder { get; private set; }
-        public string ToPath(string Name) => Path.Combine(folder, Name);
-        public FileService(string Folder)
+        public string Folder { get; private set; }
+        public string ToPath(string name) => Path.Combine(Folder, name);
+        public FileService(string folder)
         {
-            if (!Directory.Exists(Path.Combine(Folder))) Directory.CreateDirectory(Path.Combine(Folder)).Create();
-            folder = Folder;
+            if (!Directory.Exists(Path.Combine(folder))) Directory.CreateDirectory(Path.Combine(folder)).Create();
+            this.Folder = folder;
         }
         public async Task<string?> UploadFile(IBrowserFile stream)
         {
@@ -27,17 +25,17 @@ namespace Web.Services
             }
             return null;
         }
-        public void DeleteFile(string Name)
+        public void DeleteFile(string name)
         {
-            File.Delete(ToPath(Name));
+            File.Delete(ToPath(name));
         }
-        public FileStream? GetStream(string Name)
+        public FileStream? GetStream(string name)
         {
-            return File.Exists(ToPath(Name)) ? File.OpenRead(ToPath(Name)) : null;
+            return File.Exists(ToPath(name)) ? File.OpenRead(ToPath(name)) : null;
         }
-        public string? GetString(string Name)
+        public string? GetString(string name)
         {
-            var fs = GetStream(Name);
+            var fs = GetStream(name);
             var ms = new MemoryStream();
             fs?.CopyTo(ms);
             return fs is { } ? Convert.ToBase64String(ms.ToArray()) : null;

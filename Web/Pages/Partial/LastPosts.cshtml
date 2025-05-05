@@ -1,0 +1,31 @@
+﻿@model List<Web.DTO.Read.RNewsDto>
+
+@foreach (var n in Model)
+{
+    @if (n.TitleImageName is not null)
+    {
+        <div class="col-md-3">
+            <div class="post-box">
+                <a asp-page="News" asp-route-Newsid="@n.Id">
+                    <figure>
+                        <img src="~/File/@n.TitleImageName" alt="">
+                        <figcaption class="meta-fig">
+                            <span><i class="fa fa-clock-o"></i>@n.Date</span>&nbsp;
+                            @* <span><i class="fa fa-comment-o"></i> 12</span> *@
+                        </figcaption>
+                        <figcaption class="view">
+                            <span>@n.Category</span>
+                        </figcaption>
+                    </figure>
+                    <div class="text-p">
+                        <h5> @n.Title</h5>
+                        <p>@n.Content.Substring(0, 150)</p>
+                        <div class="text-rigt">
+                            <a asp-page="News" asp-route-Newsid="@n.Id">ادامه ...</a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    }
+}

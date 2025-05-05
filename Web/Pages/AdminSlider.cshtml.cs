@@ -12,15 +12,18 @@ namespace Web.Pages
         [FromQuery] public Guid? SlideId { get; set; }
         public IEnumerable<Slide> Slides { get; set; } = sliderRepo.GetAllSlides().OrderBy(p => p.IsActive);
         [FromForm] public Slide SingelSlide { get; set; } = new();
+
         public IActionResult OnGet()
         {
             if (SlideId is not null)
             {
-                if (sliderRepo.GetSlide(SlideId ?? new()) is { } s) SingelSlide = s;
+                if (sliderRepo.GetSlide(SlideId ?? Guid.Empty) is { } s) SingelSlide = s;
                 else return RedirectToPage("AdminSlider");
             }
+
             return Page();
         }
+
         public IActionResult OnPost()
         {
             if (!ModelState.IsValid) return Page();
@@ -33,17 +36,26 @@ namespace Web.Pages
             {
                 sliderRepo.AddSlide(SingelSlide);
             }
+
+            SingelSlide = new Slide();
+            SlideId = null;
             return Page();
         }
-        public IActionResult OnPostDelete(Guid Id)
+
+        public IActionResult OnPostDelete(Guid id)
         {
-            sliderRepo.RemoveSlide(Id);
+            sliderRepo.RemoveSlide(id);
             return Page();
         }
-        public IActionResult OnPostActive(Guid Id, bool Active)
+
+        public IActionResult OnPostActive(Guid id, bool active)
         {
-            if (Active) { sliderRepo.SetActive(Id); }
-            else sliderRepo.SetDeActive(Id);
+            if (active)
+            {
+                sliderRepo.SetActive(id);
+            }
+            else sliderRepo.SetDeActive(id);
+            SingelSlide = new Slide();
             return Page();
         }
     }

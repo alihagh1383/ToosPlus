@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MrX.Web.Extension;
 using Web.Repo.Interface;
@@ -12,27 +12,36 @@ namespace Web.Pages
         public void OnGet()
         {
         }
-        public void OnPost(string Name)
+
+        public void OnPost(string name)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 TempData.SetError("نام نباید خالی باشد");
                 return;
             }
-            categoriesRepo.AddCategory(Name);
+
+            categoriesRepo.AddCategory(name);
         }
-        public void OnPostPut(Guid Id, string Name)
+
+        public void OnPostPut(Guid id, string name)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 TempData.SetError("نام نباید خالی باشد");
                 return;
             }
-            categoriesRepo.UpdateCategorie(Id, Name);
+            categoriesRepo.UpdateCategorieName(id, name);
         }
-        public void OnPostDelete(Guid Id)
+
+        public void OnPostDelete(Guid id)
         {
-            categoriesRepo.RemoveCategory(Id);
+            categoriesRepo.RemoveCategory(id);
+        }
+
+        public void OnPostLoc(Guid id, LocationInIndex loc)
+        {
+            categoriesRepo.UpdateCategorieLoc(id, loc);
         }
     }
 }

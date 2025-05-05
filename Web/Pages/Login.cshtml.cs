@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MrX.Web.Extension;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Web.Repo.Interface;
 
 namespace Web.Pages
@@ -29,9 +28,9 @@ namespace Web.Pages
 
                 List<Claim> claims = [new Claim(ClaimTypes.Name, Username)];
                 Console.WriteLine(nameof(UserRule.Admin));
-                if (u.Rule.HasFlag(UserRule.Admin)) claims.Add(new(ClaimTypes.Role, nameof(UserRule.Admin)));
-                else if (u.Rule.HasFlag(UserRule.Editor)) claims.Add(new(ClaimTypes.Role, nameof(UserRule.Editor)));
-                else if (u.Rule.HasFlag(UserRule.None)) claims.Add(new(ClaimTypes.Role, nameof(UserRule.None)));
+                if (u.Rule.HasFlag(UserRule.Admin)) claims.Add(new Claim(ClaimTypes.Role, nameof(UserRule.Admin)));
+                else if (u.Rule.HasFlag(UserRule.Editor)) claims.Add(new Claim(ClaimTypes.Role, nameof(UserRule.Editor)));
+                else if (u.Rule.HasFlag(UserRule.None)) claims.Add(new Claim(ClaimTypes.Role, nameof(UserRule.None)));
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties

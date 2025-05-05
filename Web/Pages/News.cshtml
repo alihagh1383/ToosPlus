@@ -1,5 +1,5 @@
 ﻿@page
-@inject FileService fs
+@inject FileService Fs
 @model Web.Pages.NewsModel
 @{
 }
@@ -47,11 +47,11 @@
             </div>
             <div class="posts_meta text-center">
                 <span><i class="fa fa-comment-o"></i> @n.Author </span>
-                <span><i class="fa fa-archive"></i> @n.Category </span>
+                <span><i class="fa fa-archive"></i>@n.Category </span>
                 <span><i class="fa fa-calendar"></i> @n.Date </span>
             </div>
             <div class="post_content">
-                @n.Content
+                @Html.Raw(n.Content)
             </div>
 
         </div>
