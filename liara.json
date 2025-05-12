@@ -1,8 +1,8 @@
 {
-    "port": 8080,
+   "port": 8080,
    "dotnet": {
-    "version": "9.0",
-         "csprojectFile": "Web/Web.csproj"
-
-  }
+        "version": "9.0",
+        "csprojectFile": "Web/Web.csproj",
+        "team-id": "tousplus"
+      }
 }
