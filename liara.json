@@ -3,6 +3,6 @@
    "dotnet": {
         "version": "9.0",
         "csprojectFile": "Web/Web.csproj",
-        "team-id": "tousplus"
       }
+        "team-id": "tousplus"
 }
