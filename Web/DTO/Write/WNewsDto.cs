@@ -10,5 +10,6 @@ namespace Web.DTO.Write
         public string? Creator { get; set; } = null!;
         [Required] public string Category { get; set; } = null!;
         public string? TitleImageName { get; set; }
+        public string Description { get; set; } = null!;
     }
 }

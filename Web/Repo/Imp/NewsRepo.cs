@@ -21,7 +21,8 @@ namespace Web.Repo.Imp
                     Content = dto.Content,
                     Title = dto.Title,
                     Date = dto.Date ?? new DateOnly(),
-                    TitleImageName = dto.TitleImageName
+                    TitleImageName = dto.TitleImageName,
+                    Description = dto.Description
                 }).Entity;
                 dbContext.SaveChanges();
                 return (new RNewsDto
@@ -32,7 +33,8 @@ namespace Web.Repo.Imp
                     Title = dto.Title,
                     Date = dto.Date ?? new DateOnly(),
                     Id = n.Id,
-                    TitleImageName = dto.TitleImageName
+                    TitleImageName = dto.TitleImageName,
+                    Description = dto.Description
                 }, true);
             }
             else
@@ -47,7 +49,7 @@ namespace Web.Repo.Imp
                 .Include(p => p.Creator)
                 .Include(p => p.Category)
                 .FirstOrDefault(p => p.Id == id) is { } n
-                ? (new RNewsDto { Title = n.Title, Id = n.Id, Author = n.Creator.Username, Category = n.Category.Name, Content = n.Content, Date = n.Date, TitleImageName = n.TitleImageName }, true)
+                ? (new RNewsDto { Title = n.Title, Id = n.Id, Author = n.Creator.Username, Category = n.Category.Name, Content = n.Content, Date = n.Date, TitleImageName = n.TitleImageName, Description = n.Description }, true)
                 : (null, false);
         }
 
@@ -57,8 +59,8 @@ namespace Web.Repo.Imp
                     .Where(p => cat == null || p.Category.Name == cat);
             var list =
                 linq
-                    .Select(p => new { p.Category, p.Creator, p.Content, p.Date, p.Title, p.Id, p.TitleImageName })
-                    .OrderBy(p => p.Date)
+                    .Select(p => new { p.Category, p.Creator, p.Content, p.Date, p.Title, p.Id, p.TitleImageName, p.Description })
+                    .OrderByDescending(p => p.Date).ThenByDescending(p => p.Id)
                     .Skip(page * count)
                     .Take(count)
                     .Select(p => new RNewsDto
@@ -69,8 +71,10 @@ namespace Web.Repo.Imp
                         Author = p.Creator.Username,
                         Content = p.Content,
                         Category = p.Category.Name,
-                        TitleImageName = p.TitleImageName
-                    });
+                        TitleImageName = p.TitleImageName,
+                        Description = p.Description
+                    })
+                   ;
             return (list, linq.Count() / count);
         }
 
@@ -81,8 +85,8 @@ namespace Web.Repo.Imp
                     .Where(p => p.Title.Contains(q));
             var list =
                 linq
-                    .Select(p => new { p.Category, p.Creator, p.Content, p.Date, p.Title, p.Id, p.TitleImageName })
-                    .OrderBy(p => p.Date)
+                    .Select(p => new { p.Category, p.Creator, p.Content, p.Date, p.Title, p.Id, p.TitleImageName, p.Description })
+                                        .OrderByDescending(p => p.Date).ThenByDescending(p => p.Id)
                     .Skip(page * count)
                     .Take(count)
                     .Select(p => new RNewsDto
@@ -93,7 +97,8 @@ namespace Web.Repo.Imp
                         Author = p.Creator.Username,
                         Content = p.Content,
                         Category = p.Category.Name,
-                        TitleImageName = p.TitleImageName
+                        TitleImageName = p.TitleImageName,
+                        Description = p.Description
                     });
             return (list, linq.Count() / count);
         }
@@ -110,6 +115,7 @@ namespace Web.Repo.Imp
             n.Content = dto.Content;
             n.Category = c;
             n.TitleImageName = dto.TitleImageName ?? n.TitleImageName;
+            n.Description = dto.Description;
             dbContext.News.Update(n);
             dbContext.SaveChanges();
             return (new RNewsDto
@@ -120,7 +126,8 @@ namespace Web.Repo.Imp
                 Author = u.Username,
                 Content = n.Content,
                 Category = c.Name,
-                TitleImageName = n.TitleImageName
+                TitleImageName = n.TitleImageName,
+                Description = n.Description
             }, true);
         }
     }

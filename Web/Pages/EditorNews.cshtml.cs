@@ -28,6 +28,7 @@ namespace Web.Pages
                     News.Category = n.Category;
                     News.Date = n.Date;
                     News.TitleImageName = n.TitleImageName;
+                    News.Description = n.Description;
                     return Page();
                 }
                 else return RedirectToPage("/News", new { area = "Editor" });
@@ -65,7 +66,8 @@ namespace Web.Pages
                                     Date = News.Date ?? n.news.Date,
                                     Id = n.news.Id,
                                     Title = News.Title,
-                                    TitleImageName = News.TitleImageName ?? n.news.TitleImageName
+                                    TitleImageName = News.TitleImageName ?? n.news.TitleImageName,
+                                    Description = News.Description,
                                 });
                                 return RedirectToPage("/News", new { area = "Editor", NewsId = n.news.Id });
                             }

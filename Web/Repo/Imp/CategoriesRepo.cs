@@ -61,7 +61,7 @@ namespace Web.Repo.Imp
                     Name = p.Name,
                     LocationInIndex = p.LocationInIndex,
                     Id = p.Id,
-                    News = p.News.Take(count ?? 0).ToList(),
+                    News = p.News.OrderDescending().Take(count ?? 0).ToList(),
                 }).FirstOrDefault(p => p.Id == id);
             return dbContext.NewsCategories.Include(p => p.News).FirstOrDefault(p => p.Id == id);
         }

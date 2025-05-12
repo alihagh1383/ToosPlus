@@ -9,5 +9,6 @@
         public string Category { get; set; } = null!;
         public string Author { get; set; } = null!;
         public string? TitleImageName { get; set; }
+        public string Description { get; set; } = null!;
     }
 }

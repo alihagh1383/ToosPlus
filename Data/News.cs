@@ -7,6 +7,7 @@ namespace Data
         [Key] public Guid Id { get; set; }
         [Required(AllowEmptyStrings = false)][MaxLength(500)] public string Title { get; set; } = null!;
         [Required(AllowEmptyStrings = false)] public string Content { get; set; } = string.Empty;
+        [Required(AllowEmptyStrings = false)] public string Description { get; set; } = string.Empty;
         public List<User> Likes { get; set; } = [];
         [Required] public User Creator { get; set; } = null!;
         [Required] public NewsCategory Category { get; set; } = null!;
